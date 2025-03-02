@@ -133,6 +133,7 @@ Compute the embedding for your query.
 - Annoy Settings: Tweak parameters such as VECTOR_SIZE and ANNOY_TREE_COUNT in vector_db.py to suit your data and - performance requirements.
 - Summarization Prompt: Modify the prompt in summarizer.py to tailor the summarization output.
 ## 🚀 Future Improvements
+- Add More DataSet
 - Advanced Vector DBs: Experiment with specialized vector databases like Pinecone, Milvus, or Qdrant for even faster search performance.
 ## 📜 License
 #### ⚠️ This project is licensed under the MIT License.
