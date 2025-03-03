@@ -1,5 +1,5 @@
 # AI-RAG FLOW -Local AI Powered Datawharehouse System-
-[ai-ragflow](https://ai-ragflow.com/)
+🌍[DEMO](https://ai-ragflow.com/)
 ## 📖 Table of Contents
 - [📝 Introduction](#introduction)
 - [📊 Features](#features)
