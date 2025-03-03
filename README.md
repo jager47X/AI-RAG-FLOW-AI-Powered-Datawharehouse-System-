@@ -74,7 +74,6 @@ For testing, this system utilizes the Open Australian Legal Corpus, available on
 
 
 ## 📂 Project Structure
-
 - **config.py**:Loads environment variables (.env) 
 - **ingest.py(ingest_legal_Corpus)** :Ingests CSV data into MongoDB 
 - **db.py**:ETL query, Embedding computation, Annoy index building, and similarity search
