@@ -1,0 +1,10 @@
+openai
+python-dotenv
+pymongo
+pandas
+annoy
+tiktoken 
+db
+retriever
+torch
+sentence_transformers

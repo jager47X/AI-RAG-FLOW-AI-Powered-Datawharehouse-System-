@@ -1,0 +1,11 @@
+
+
+# Ignore Python compiled files and caches
+*.pyc
+__pycache__/
+
+
+# Ignore Test files
+Corpus/
+
+flask_session/
