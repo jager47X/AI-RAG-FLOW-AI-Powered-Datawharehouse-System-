@@ -75,10 +75,11 @@ For testing, this system utilizes the Open Australian Legal Corpus, available on
 
 ## 📂 Project Structure
 - **config.py**:Loads environment variables (.env) 
-- **ingest.py(ingest_legal_Corpus)** :Ingests CSV data into MongoDB 
+- **ingest.py(ingest_Australian_Legal_Corpus)** :Ingests data into MongoDB
+- **update_embeddings.py** Update the embedding in Mongo DB. 
 - **db.py**:ETL query, Embedding computation, Annoy index building, and similarity search
-- **summarizer.py** : ChatGPT summarization of retrieved cases
-- **main.py**:    Main entry point for user query processing
+- **chatgpt.py** : ChatGPT summarization of retrieved cases
+- **test_main.py**:    Main entry point for user query processing to test output in cl
 - **.env**:   Contains sensitive variables (API keys, MongoDB URI, etc.)
 - **requirements.txt**:   Python dependencies
 
@@ -128,15 +129,17 @@ Compute the embedding for your query.
 - Display the summarized insights in the console.
 
 ## ⚙️ Customization
-- Embedding Model: Change the EMBEDDING_MODEL in your .env file to use a different OpenAI model if needed.
+- Embedding Model: Change the EMBEDDING_MODEL in your .env file to use a different OpenAI model or Localy compute using sentenceTransformer if needed.
 - MongoDB Configuration: Adjust the MONGO_URI in your .env file to connect to a different MongoDB instance.
 - Annoy Settings: Tweak parameters such as VECTOR_SIZE and ANNOY_TREE_COUNT in vector_db.py to suit your data and - performance requirements.
 - Summarization Prompt: Modify the prompt in summarizer.py to tailor the summarization output.
+- ingest.py: ingest_Australian_Legal_Corpus.py is the example of how to ingest data from JSONL to mongoDB. Each ingesting requires diffrent methods.
+- More Database: Modify client of mongodb to add more database.
 ## 🚀 Future Improvements
 - Add More DataSet
 - Advanced Vector DBs: Experiment with specialized vector databases like Pinecone, Milvus, or Qdrant for even faster search performance.
 ## 📜 License
-#### ⚠️ This project is licensed under the MIT License.
+#### ⚠️ This project is licensed under the Apache License 2.0.
 
 ## 🤝Contributer
 ### 👤Software Engineer: Yuto Mori (Auther)
