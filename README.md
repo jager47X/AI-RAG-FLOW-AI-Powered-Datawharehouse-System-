@@ -1,4 +1,4 @@
-# AI-RAG FLOW -High-Accurate-Local-Retrieval-Augmented-Generation-
+# AI-RAG FLOW -Local AI Powered Datawharehouse System-
 ## 📖 Table of Contents
 - [📝 Introduction](#introduction)
 - [📊 Features](#features)
