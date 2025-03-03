@@ -143,8 +143,7 @@ Compute the embedding for your query.
 #### ⚠️ This project is licensed under the Apache License 2.0.
 
 ## 🤝Contributer
-### 👤Software Engineer: Yuto Mori (Auther)
-### 👤Designer: Ambre Grimault 
+### 👤Logo Designer: Ambre Grimault 
 
 ## 📬Contact
 Contributions, issues, and feature requests are welcome! Please check the issues page for known issues and to submit new ones.
