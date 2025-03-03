@@ -1,4 +1,4 @@
-# RAG-FLOW
+# AI-RAG FLOW -High-Accurate-Local-Retrieval-Augmented-Generation-
 ## 📖 Table of Contents
 - [📝 Introduction](#introduction)
 - [📊 Features](#features)
