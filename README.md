@@ -136,6 +136,7 @@ Compute the embedding for your query.
 - Summarization Prompt: Modify the prompt in summarizer.py to tailor the summarization output.
 - ingest.py: ingest_Australian_Legal_Corpus.py is the example of how to ingest data from JSONL to mongoDB. Each ingesting requires diffrent methods.
 - More Database: Modify client of mongodb to add more database.
+- Number of TOP_QUERY_RESULT: Each result takes around 1GB in RAM.
 ## 🚀 Future Improvements
 - Add More DataSet
 - Advanced Vector DBs: Experiment with specialized vector databases like Pinecone, Milvus, or Qdrant for even faster search performance.
