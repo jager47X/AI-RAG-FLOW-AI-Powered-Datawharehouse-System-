@@ -127,12 +127,12 @@ class DatabaseHandler:
         similar_cases = None
         query_processed = True
         logger.info("Querying...")
-        current_query = query
+        current_query  = query.replace(" ", "").lower()
 
         while rephrase_attempt < 5 or similar_cases==0:
             if rephrase_attempt > 0:
                 logger.info("No similar cases found above threshold. Rephrasing query (attempt %d)...", rephrase_attempt + 1)
-                current_query = self.openAI.rephrase_query(query, previous_rephrases)
+                current_query = self.openAI.rephrase_query(query, self.document_type,previous_rephrases)
                 logger.info("New query: %s", current_query)
                 previous_rephrases.append(current_query)
                 query = current_query

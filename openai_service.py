@@ -3,7 +3,7 @@ import numpy as np
 import logging
 import datetime
 import tiktoken  # Ensure you have installed the tiktoken package
-from config import OPENAI_API_KEY, EMBEDDING_MODEL, LIMIT
+from config import OPENAI_API_KEY, EMBEDDING_MODEL, LIMIT,CHATMODEL
 MAX_TOTAL_TOKENS = 8000 
 
 # Set OpenAI API key.
@@ -14,75 +14,73 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 class ChatGPT:
-    def __init__(self, db, preprocess=False):
+    def __init__(self, db, collection_name="us_constitution_annoy",preprocess=False):
         """
         Initialize ChatGPT service.
         
         :param db: MongoDB database instance (for search limits, etc.)
         """
-        self.chat_model = "gpt-4o"  # Chat model to use for completions
+        self.chat_model = CHATMODEL # Chat model to use for completions
         self.embedding_model = EMBEDDING_MODEL
         self.db = db
         self.preprocess=preprocess
         # Optionally, set a default unique field; this can be overwritten externally.
         self.unique_field = "title"
-
+        
     def summarize_cases(self, case):
-        """
-        Summarizes a single case document using ChatGPT.
-        If a summary already exists in the case, returns it.
-        Otherwise, generates a summary, updates the document in the database,
-        stores it in the case dictionary, and returns it.
-        """
-        if case.get("summary"):
-            logger.info("Summary already exists for case with %s: %s", 
+            """
+            Summarizes a single case document using ChatGPT.
+            If a summary already exists in the case, returns it.
+            Otherwise, generates a summary, updates the document in the database,
+            stores it in the case dictionary, and returns it.
+            """
+            if case.get("summary"):
+                logger.info("Summary already exists for case with %s: %s", 
+                            self.unique_field, case.get(self.unique_field))
+                return case["summary"]
+
+            context = f"text:\n{case.get('text')}"
+            prompt = (
+                f"Summarize the following case:\n\n"
+                f"{context}\n\nSummary:"
+            )
+
+            logger.info("Generating summary for case with %s: %s", 
                         self.unique_field, case.get(self.unique_field))
-            return case["summary"]
+            try:
+                response = openai.chat.completions.create(
+                    model=self.chat_model,
+                    messages=[{"role": "user", "content": prompt}],
+                    max_tokens=250
+                )
+                summary = response.choices[0].message.content.strip()
+                logger.info("Summary generated successfully for case with _id: %s", case.get("_id"))
+            except Exception as e:
+                logger.error("Error generating summary: %s", e)
+                summary = ""
+            
+            # Update the summary in the document stored in the dynamic collection.
+            try:
+                self.db[self.collection_name].update_one(
+                    {"_id": case["_id"]},
+                    {"$set": {"summary": summary}}
+                )
+                logger.info("Updated summary in database for case with _id: %s", case.get("_id"))
+            except Exception as e:
+                logger.error("Failed to update summary in database: %s", e)
+            
+            # Also update the case dictionary locally.
+            case["summary"] = summary
+            # Increment the search count (if needed).
+            self.increment_search_count(self.can_search_today()[1])
+            return summary
 
-        context = f"context:\n{case.get('text')}"
-        prompt = (
-            f"Summarize the following case and highlight the top insights:\n\n"
-            f"{context}\n\nSummary:"
-        )
-
-        logger.info("Generating summary for case with %s: %s", 
-                    self.unique_field, case.get(self.unique_field))
-        try:
-            response = openai.chat.completions.create(
-                model=self.chat_model,
-                messages=[{"role": "user", "content": prompt}],
-                max_tokens=500
-            )
-            summary = response.choices[0].message.content.strip()
-            logger.info("Summary generated successfully for case with _id: %s", case.get("_id"))
-        except Exception as e:
-            logger.error("Error generating summary: %s", e)
-            summary = ""
-        
-        # Update the summary in the document stored in the annoy collection.
-        try:
-            # Update the document with the generated summary.
-            # Adjust the collection name as necessary.
-            self.db["us_constitution_annoy"].update_one(
-                {"_id": case["_id"]},
-                {"$set": {"summary": summary}}
-            )
-            logger.info("Updated summary in database for case with _id: %s", case.get("_id"))
-        except Exception as e:
-            logger.error("Failed to update summary in database: %s", e)
-        
-        # Also update the case dictionary locally.
-        case["summary"] = summary
-        # Increment the search count (if needed).
-        self.increment_search_count(self.can_search_today()[1])
-        return summary
-
-    def rephrase_query(self, query, avoid_list):
+    def rephrase_query(self,document_type, query, avoid_list):
         """
         Rephrases the input query using ChatGPT to generate a more effective version,
         while avoiding any phrases provided in avoid_list.
         """
-        query_allowed, usage = self.can_search_today(limit=LIMIT)
+        query_allowed, usage = self.can_search_today()
         if not query_allowed:
             logger.warning("Reached the daily search limit.")
             return None
@@ -91,7 +89,7 @@ class ChatGPT:
             avoid_text = "\nAvoid using any of the following phrases: " + ", ".join(avoid_list)
         
         prompt = (
-            f"Rephrase the following query to improve its clarity and effectiveness:\n\n"
+            f"User is searching documents in the database of {document_type}, Rephrase the following query to improve its clarity and effectiveness, Do not ask me back but guess the best.:\n\n"
             f"Query: {query}\n"
             f"{avoid_text}\n\n"
             f"Rephrased Query:"
@@ -117,7 +115,7 @@ class ChatGPT:
         """
         Generates an embedding for the given text (after truncation).
         """
-        query_allowed, usage = self.can_search_today(limit=LIMIT)
+        query_allowed, usage = self.can_search_today()
         if not query_allowed:
             logger.warning("Reached the daily search limit.")
             return None
@@ -157,7 +155,7 @@ class ChatGPT:
         logger.info("Today's date: %s", today_str)
         return today_str
 
-    def can_search_today(self, limit=100):
+    def can_search_today(self):
         """
         Returns True if today's search count is below the given limit.
         Also returns the current count.
@@ -172,7 +170,7 @@ class ChatGPT:
                 return True, 0
             usage_today = record.get("OpenAPI_Request", 0)
             logger.info("Usage of today: %d", usage_today)
-            return usage_today < limit, usage_today
+            return usage_today < LIMIT, usage_today
         return True,0
 
     def increment_search_count(self, count):
