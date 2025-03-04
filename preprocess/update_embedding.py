@@ -16,8 +16,10 @@ logger = logging.getLogger(__name__)
 
 def update_corpus_embeddings(config):
     """
-    For each document in the corpus (as specified in config) that lacks an 'embedding' field,
-    compute the embedding using OpenAI and update the document using the unique field provided in the config.
+    For each document in the corpus (as specified in config),
+    compute the embedding using OpenAI and update the document.
+    The user is prompted to choose whether to resume processing documents
+    that lack an 'embedding' field, or reprocess all documents.
     """
     logger.info("Connecting to the database...")
 
@@ -25,29 +27,39 @@ def update_corpus_embeddings(config):
         db = client[config["db_name"]]
         embedding_collection = db[config["embedding_collection_name"]]
         logger.info("Connected to the database.")
-        logger.info("Counting the number of documents to add embeddings.")
         total_count = embedding_collection.count_documents({})
-        
 
-        count_docs = embedding_collection.count_documents({"embedding": {"$exists": False}})
-        embedded = total_count - count_docs
+        count_missing = embedding_collection.count_documents({"embedding": {"$exists": False}})
+        logger.info(f"Total documents in collection: {total_count}")
+        logger.info(f"Documents missing embeddings: {count_missing}")
 
-        if total_count > 0:
-            percentage = (embedded / total_count) * 100
-            one_percent = total_count / 100  # Corrected calculation
-        else:
-            percentage = 0
-            one_percent = 1  # Prevent division by zero
+        # Prompt user to choose processing mode.
+        logger.info("Choose processing mode:")
+        logger.info("  [c] Continue processing missing embeddings only")
+        logger.info("  [b] Start from beginning (process all documents)")
+        mode = input("Enter your choice (c/b): ").strip().lower()
 
-        logger.info(f"Total documents in collection with embedding: {embedded}/{total_count}")
-        logger.info(f"Progress: {percentage:.2f}% completed")
-        logger.info(f"Number of documents to add embeddings: {count_docs}")
+        if mode not in ['c', 'b']:
+            logger.warning("Invalid input. Defaulting to 'continue' mode.")
+            mode = 'c'
 
-        docs = embedding_collection.find({"embedding": {"$exists": False}})
-        unique_field = config.get("unique_index", "title")  # Default to "title"
-        openAI_Embeddings = ChatGPT(db,preprocess=True)
+        if mode == 'c':
+            docs = embedding_collection.find({"embedding": {"$exists": False}})
+            # We'll update the running count based on only the new embeddings.
+            processed = total_count - count_missing
+        else:  # mode == 'b'
+            docs = embedding_collection.find({})
+            # Optionally, you might want to remove the existing embeddings.
+            result = embedding_collection.update_many({}, {"$unset": {"embedding": ""}})
+            logger.info("Removed existing embeddings from %d documents.", result.modified_count)
+            processed = 0  # starting fresh
 
-        user_input = input("Processed? (y/n): ").strip().lower()
+        logger.info("Starting embedding update...")
+
+        openAI_Embeddings = ChatGPT(db, preprocess=True)
+
+        # Confirm with the user before starting.
+        user_input = input("Proceed with embedding update? (y/n): ").strip().lower()
         if user_input != 'y':
             logger.warning("Skipping embedding update as per user input.")
             return
@@ -57,19 +69,21 @@ def update_corpus_embeddings(config):
             if text:
                 try:
                     embedding = openAI_Embeddings.get_openai_embedding(text)
+                    # Convert to list if necessary.
                     embedding_list = embedding.tolist() if hasattr(embedding, "tolist") else embedding
 
-                    # Update using the unique field from the configuration.
+                    # Update using the unique field specified in the config.
+                    unique_field = config.get("unique_index", "title")  # Default to "title"
                     embedding_collection.update_one(
                         {unique_field: doc[unique_field]},
                         {"$set": {"embedding": embedding_list}}
                     )
 
-                    embedded += 1
-                    new_percentage = (embedded / total_count) * 100 if total_count > 0 else 100
-
-                    if embedded % one_percent < 1:  # Log only when a full 1% is reached
-                        logger.info(f"Progress: {new_percentage:.2f}% completed")
+                    processed += 1
+                    percentage = (processed / total_count) * 100 if total_count > 0 else 100
+                    # Log progress every ~1% progress.
+                    if processed % max(1, int(total_count / 100)) == 0:
+                        logger.info(f"Progress: {percentage:.2f}% completed")
 
                     logger.debug("Updated embedding for document with %s: %s", unique_field, doc.get(unique_field))
 
