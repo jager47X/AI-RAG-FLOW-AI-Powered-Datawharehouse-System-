@@ -179,10 +179,11 @@ class ChatGPT:
         """Increment today's search count by one."""
         if not self.preprocess:
             today = self.get_today_str()
-            count += 1
-            logger.info("Updated usage of today to %d.", count)
+            new_count = count + 1  # calculate new count for logging
+            logger.info("Updated usage of today to %d.", new_count)
+            # Use $inc with 1 so that it increments by one, regardless of count
             self.db.search_limits.update_one(
                 {"date": today},
-                {"$inc": {"OpenAPI_Request": count}},
+                {"$inc": {"OpenAPI_Request": 1}},
                 upsert=True
             )

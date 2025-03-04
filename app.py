@@ -1,15 +1,27 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from db import DatabaseHandler  # Your DatabaseHandler class
-from chatgpt import summarize_cases
-from config import COLLECTION  # This contains your US_CONSITITON_SET, AUS_LAW_SET, etc.
+from gevent import monkey, spawn, kill
+monkey.patch_all()
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from DatabaseHandler import DatabaseHandler  # Your DatabaseHandler class
+from openai_service import ChatGPT
+from pymongo import MongoClient
+from config import COLLECTION,MONGO_URI,DB_NAME  # This contains your US_CONSITITON_SET, AUS_LAW_SET, etc.
 from flask_session import Session
 from bson import ObjectId
+import logging
 
+import uuid
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
-app.secret_key = 'your-secret-key'
+app.secret_key = 'ambre'
 Session(app)
+client = MongoClient(MONGO_URI)
+db = client[DB_NAME]
+# Instantiate the DatabaseHandler and ChatGPT service.
 
+# Configure logging.
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logger = logging.getLogger(__name__)
+active_searches = {}
 def serialize_results(results):
     serialized = []
     for case, similarity in results:
@@ -28,21 +40,42 @@ def inject_document_type():
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    chat_service = ChatGPT(db)
+    allowed, count = chat_service.can_search_today()  # Returns (True/False, current count)
+    return render_template('index.html', configurations=COLLECTION, search_allowed=allowed, search_count=count)
+@app.route('/cancel', methods=['POST'])
+def cancel():
+    search_id = session.get('search_id')
+    g = active_searches.get(search_id)
+    if g:
+        kill(g)  # Stop the running greenlet.
+        active_searches.pop(search_id, None)
+        return jsonify({"status": "cancelled", "message": "Search cancelled."})
+    else:
+        return jsonify({"status": "no_active_search", "message": "No active search to cancel."})
 
+# New route: After cancellation, redirect here.
+@app.route('/cancelled', methods=['GET'])
+def cancelled():
+    return render_template('base.html', error="Search cancelled.", show_home=True)
 @app.route('/search', methods=['POST'])
 def search():
+    chat_service = ChatGPT(db)
+    if not chat_service.can_search_today():  # call the method with parentheses
+        return render_template('base.html', error="Reached the limit of the search today. Please try again tomorrow.", show_home=True)
+
     query = request.form.get('query')
-    collection = request.form.get('collection', 'US_CONSITITON_SET')
-    
-    if not query or not collection:
-        return redirect(url_for('index'))
+    # Get the configuration key from the form; if missing or invalid, default to "US_CONSTITUTION_SET".
+    config_key = request.form.get('collection', 'US_CONSTITUTION_SET').strip()
+    if config_key not in COLLECTION:
+        logger.warning("Invalid configuration key provided: '%s'. Defaulting to US_CONSTITUTION_SET.", config_key)
+        config_key = "US_CONSTITUTION_SET"
     
     # Save the selected document type in the session.
-    session['document_type'] = COLLECTION[collection]["document_type"]
+    session['document_type'] = COLLECTION[config_key]["document_type"]
     
     # Process the query using the updated backend function.
-    db_handler = DatabaseHandler(COLLECTION[collection])
+    db_handler = DatabaseHandler(COLLECTION[config_key])
     results, query_processed = db_handler.process_query(query)
     
     if not query_processed:
@@ -56,6 +89,8 @@ def search():
     session['results'] = serialize_results(results)
     session['current_idx'] = 0
     return redirect(url_for('result'))
+
+
 
 @app.route('/eula')
 def eula():
@@ -73,7 +108,9 @@ def result():
         return render_template('result.html', error="No more cases available. Please enter a new query.")
     
     case, similarity = results[current_idx]
-    summary = summarize_cases(case, similarity)
+    # Instantiate ChatGPT using the global database (MongoClient remains open).
+    chat_service = ChatGPT(db)
+    summary = chat_service.summarize_cases(case)
     return render_template('result.html', summary=summary, similarity=similarity, idx=current_idx+1, total=len(results))
 
 @app.route('/next', methods=['GET'])
@@ -89,34 +126,9 @@ def more_details():
     if not results or current_idx >= len(results):
         return redirect(url_for('result'))
     
-    # Unpack the current result (each result is a tuple: (case, similarity))
     case, similarity = results[current_idx]
-    # Get the document type from the session (set during search)
-    doc_type = session.get('document_type', 'Default')
-    
-    # Define a mapping for different document types.
-    # You can expand this mapping as needed.
-    if doc_type == "US Constitution":
-        details = {
-            "article": case.get('article', 'N/A'),
-            "section": case.get('section', 'N/A'),
-            "title": case.get('title', 'N/A'),
-            "text": case.get('text', 'N/A')
-        }
-    elif doc_type == "Australia Laws 2024":
-        details = {
-         "version_id": case.get('version_id'),
-         "type": case.get('type'),
-         "jurisdiction": case.get('jurisdiction'),
-         "source": case.get('source'),
-         "citation": case.get('citation'),
-         "url": case.get('url'),
-         "text": case.get("text"),
-    }
-    else:
-        # Default arbitrary mapping if document type isn't recognized.
-        details = {key: case.get(key, 'N/A') for key in case.keys()}
-
+    # Build details dictionary excluding '_id' and 'map_id'
+    details = { key: value for key, value in case.items() if key not in ["_id", "map_id"] }
     return render_template('details.html', details=details)
 
 if __name__ == '__main__':
