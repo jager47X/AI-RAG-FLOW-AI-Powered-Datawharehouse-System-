@@ -24,15 +24,15 @@ def update_corpus_embeddings(config):
         db = client[config["db_name"]]
         embedding_collection = db[config["embedding_collection_name"]]
         logger.info("Connected to the database.")
-        
+        logger.info("Counting the number of the documents to add embeddings.")
         # Count documents missing an embedding.
         count_docs = embedding_collection.count_documents({"embedding": {"$exists": False}})
         logger.info("Number of documents to add embeddings: %d", count_docs)
-        
+        logger.info("Counting the number of the documents to add embeddings.")
         docs = embedding_collection.find({"embedding": {"$exists": False}})
         unique_field = config.get("unique_index", "title")  # default to "title"
 
-        openAI_Embeddings=ChatGPT()
+        openAI_Embeddings=ChatGPT(db)
         for doc in docs:
             text = doc.get("text", "").strip()
             if text:
