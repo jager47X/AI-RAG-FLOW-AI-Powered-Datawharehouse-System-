@@ -29,8 +29,8 @@ COLLECTION = {
     "AUS_LAW_SET": {
         "db_name": DB_NAME,
         "query_collection_name": QUERY_COLLECTION_NAME,
-        "embedding_collection_name": "Australia_Law_2024_embedding",
-        "annoy_collection_name": "Australia_Law_2024_annoy",
+        "embedding_collection_name": "Australian_Law_2024_embedding",
+        "annoy_collection_name": "Australian_Law_2024_annoy",
         "annoy_index_path": "./annoy/auslaw.ann",
         "id_map_path": "./annoy/aus_id_map.pkl",
         "document_type": "Australia Laws 2024",  # Type of the document
