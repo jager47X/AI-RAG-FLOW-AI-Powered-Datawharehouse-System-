@@ -2,53 +2,51 @@
 ![logo](logo.png)
 🌍[DEMO](https://ai-ragflow.com/)
 ## 📖 Table of Contents
-- [📝 Introduction](#introduction)
-- [📊 Features](#features)
-- [📂 Project Structure](#project-structure)
-- [🔧 Setup Instructions](#setup-instructions)
+- 📝[Introduction](#introduction)
+- 📊[Features](#features)
+- 📂 [Project Structure](#project-structure)
+- 🔧[ Setup Instructions](#setup-instructions)
   - [Clone the Repository](#clone-the-repository)
   - [Install Dependencies](#install-dependencies)
   - [Configure Environment Variables](#configure-environment-variables)
   - [Download Dataset](#download-dataset)
-  - [Check Data Structure of the dataset in config.py](#download-dataset)
-  - [Obtain API key](#obtain-api-key)
-- [✅ Usage](#usage)
+  - [Check Data Structure](#check-data-structure)
+  - [Obtain API Key](#obtain-api-key)
+- ✅[Usage](#usage)
   - [Ingest Data](#ingest-data)
-  - [Create Embedding ](#create-embedding )
-  - [Create Embedding ](#create-embedding )
+  - [Create Embedding](#create-embedding)
   - [Build Search Engine](#build-search-engine)
-  - [Process Queries](#download-dataset)
-  - [Check Data Structure of the dataset in config.py](#download-dataset)
-
-- [⚙️ Customization](#customization)
+  - [Process Queries](#process-queries)
+- ⚙️[Customization](#customization)
   - [Change the Embedding Model](#change-the-embedding-model)
-- [📜 License](#license)
-- [🤝 Contributing](#contributing)
-- [📬 Contact](#contact)
+- 📜[License](#license)
+- 🤝[Contributor](#contributor)
+- 📬[Contact](#contact)
 
 
-## 📝 Introduction
-### 🚀 Motivation
+
+## Introduction
+### Motivation
 
 Currently, we rely on ChatGPT for searching, but it presents several issues:
 
-### ⚠️ Problems:
+### Problems:
 -  **Hallucination** – The model sometimes generates inaccurate or misleading information.
 -  **Incomplete Results** – It does not retrieve all relevant matches.
 
-### ✅ Solution:
+### Solution:
 #### This project is a **Retrieval-Augmented Generation (RAG) system** designed to handle large datasets, specifically for **legal text analysis and retrieval**. It leverages:
 - **MongoDB** for document storage and retrieval.
 - **OpenAI embeddings** for semantic search.
 - **Annoy-based vector search** for efficient similarity-based matching.
 
-### 🎯 Key Improvements:
+### Key Improvements:
 -  **Reduced Hallucination** – By restricting searches to a **local domain**, we drastically lower the chances of misinformation.
 -  **Higher Accuracy** – Utilizing the **latest OpenAI embedding model**, we aim to surpass existing solutions in precision and relevance.
 -  **Optimized API Usage** – By caching and saving search queries and keep the embedding in the storage, we **reduce API costs** while maintaining efficient retrieval.
 -  **Fast Search Engine** – By using the prebuild annoy index, we **reduce the time of search** .
 
-## 📊 Features
+## Features
 ### 🔹 Key Features
 -  Scalable Large-Scale Data Processing – Designed for handling extensive datasets efficiently.
 -  ChatGPT API with the Latest Embedding Model – Ensures high-accuracy text search and retrieval.
@@ -82,7 +80,7 @@ Currently, we rely on ChatGPT for searching, but it presents several issues:
 - Summarization: Summarizes the top 10 retrieved cases using ChatGPT.
 
 
-## 📂 Project Structure
+## Project Structure
 ```py
 AI-RAG-FLOW-AI-Powered-Datawharehouse-System-/
 ├── .env                          # Environment variables file 
@@ -107,7 +105,7 @@ AI-RAG-FLOW-AI-Powered-Datawharehouse-System-/
     ├── auslaw.ann                # Annoy index file 
     └── aus_id_map.pkl            # ID map for the Annoy index file 
 ```
-## 🔧 Setup Instructions
+## Setup Instructions
 ### 1. 🖥️ Clone the Repository
 
 ```bash
@@ -167,7 +165,7 @@ COLLECTION = {
 ### 6. 💰 Obtain API key
 ### 💰 Obtain API key from [OpenAI'API](https://openai.com/api/)
 
-## ✅ Usage
+## Usage
 
 ### 1. 🔄 Ingest Data
 - Each Parsing needs to be implmented beforehand, then load your JSONL data into MongoDB by running:
@@ -408,7 +406,7 @@ Enter a query, 'next' for next result, 'more' for details, or 'exit': exit
 Goodbye!
 ```
 
-## ⚙️ Customization
+## Customization
 - Embedding Model: Change the EMBEDDING_MODEL in your .env file to use a different OpenAI model or Localy compute using sentenceTransformer if needed.
 - MongoDB Configuration: Adjust the MONGO_URI in your .env file to connect to a different MongoDB instance.
 - Annoy Settings: Tweak parameters such as VECTOR_SIZE and ANNOY_TREE_COUNT in build_searchEngine.py to suit your data and - performance requirements.
@@ -425,12 +423,12 @@ Goodbye!
   - TOP_QUERY_RESULT - Number of query retiriveted at once
   - LIMIT=1000   -  limit of the query per day
 
-## 📜 License
-#### ⚠️ This project is licensed under the Apache License 2.0.
+## License
+#### This project is licensed under the Apache License 2.0.
 
-## 🤝Contributer
-### 👤Logo Designer: Ambre Grimault 
+## Contributer
+### Logo Designer: Ambre Grimault 
 
-## 📬Contact
+## Contact
 Contributions, issues, and feature requests are welcome! Please check the issues page for known issues and to submit new ones.
 #### 📧Email: contact.ragflow@gmail.com 
