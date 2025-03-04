@@ -414,9 +414,8 @@ Goodbye!
 - More Database: To add more custmize data follow the each step:   
   1. [Check Data Structure of the dataset in config.py and add the dataset](#download-dataset)
   2. [Ingest Data](#ingest-data)
-  3. [Create Embedding ](#create-embedding )
-  4. [Create Embedding ](#create-embedding )
-  5. [Build Search Engine](#build-search-engine)
+  3. [Create Embedding](#create-embedding)
+  4. [Build Search Engine](#build-search-engine)
  
 - Other Configuration: 
   - THRESHOLD_QUERY_SEARCH - Threshold of the cosine simialrity of the search
