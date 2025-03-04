@@ -3,9 +3,12 @@
 # Ignore Python compiled files and caches
 *.pyc
 __pycache__/
+preprocess/__pycache__/
 
-
-# Ignore Test files
+# Ignore  Corpus avoid large file
 Corpus/
-
+# Ignore env
+.env
+# Ignore annoy
+annoy/
 flask_session/

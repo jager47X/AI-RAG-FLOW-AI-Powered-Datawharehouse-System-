@@ -9,7 +9,17 @@
   - [Clone the Repository](#clone-the-repository)
   - [Install Dependencies](#install-dependencies)
   - [Configure Environment Variables](#configure-environment-variables)
+  - [Download Dataset](#download-dataset)
+  - [Check Data Structure of the dataset in config.py](#download-dataset)
+  - [Obtain API key](#obtain-api-key)
 - [✅ Usage](#usage)
+  - [Ingest Data](#ingest-data)
+  - [Create Embedding ](#create-embedding )
+  - [Create Embedding ](#create-embedding )
+  - [Build Search Engine](#build-search-engine)
+  - [Process Queries](#download-dataset)
+  - [Check Data Structure of the dataset in config.py](#download-dataset)
+
 - [⚙️ Customization](#customization)
   - [Change the Embedding Model](#change-the-embedding-model)
 - [📜 License](#license)
@@ -22,31 +32,30 @@
 
 Currently, we rely on ChatGPT for searching, but it presents several issues:
 
-#### ⚠️ Problems:
-- 🔍 **Hallucination** – The model sometimes generates inaccurate or misleading information.
-- 📉 **Incomplete Results** – It does not retrieve all relevant matches.
+### ⚠️ Problems:
+-  **Hallucination** – The model sometimes generates inaccurate or misleading information.
+-  **Incomplete Results** – It does not retrieve all relevant matches.
 
-#### ✅ Solution:
-This project is a **Retrieval-Augmented Generation (RAG) system** designed to handle large datasets, specifically for **legal text analysis and retrieval**. It leverages:
-- 🗄️ **MongoDB** for document storage and retrieval.
-- 🧠 **OpenAI embeddings** for semantic search.
-- ⚡ **Annoy-based vector search** for efficient similarity-based matching.
+### ✅ Solution:
+#### This project is a **Retrieval-Augmented Generation (RAG) system** designed to handle large datasets, specifically for **legal text analysis and retrieval**. It leverages:
+- **MongoDB** for document storage and retrieval.
+- **OpenAI embeddings** for semantic search.
+- **Annoy-based vector search** for efficient similarity-based matching.
 
-### 🔥 Key Improvements:
-- 🛡️ **Reduced Hallucination** – By restricting searches to a **local domain**, we drastically lower the chances of misinformation.
-- 🎯 **Higher Accuracy** – Utilizing the **latest OpenAI embedding model**, we aim to surpass existing solutions in precision and relevance.
-- 💰 **Optimized API Usage** – By caching and saving search queries, we **reduce API costs** while maintaining efficient retrieval.
+### 🎯 Key Improvements:
+-  **Reduced Hallucination** – By restricting searches to a **local domain**, we drastically lower the chances of misinformation.
+-  **Higher Accuracy** – Utilizing the **latest OpenAI embedding model**, we aim to surpass existing solutions in precision and relevance.
+-  **Optimized API Usage** – By caching and saving search queries and keep the embedding in the storage, we **reduce API costs** while maintaining efficient retrieval.
+-  **Fast Search Engine** – By using the prebuild annoy index, we **reduce the time of search** .
 
-
-### 📂 Dataset Used
-For testing, this system utilizes the Open Australian Legal Corpus, available on Kaggle:🔗 [Open Australian Legal Corpus](https://www.kaggle.com/datasets/umarbutler/open-australian-legal-corpus)
 ## 📊 Features
 ### 🔹 Key Features
-- ✅ Scalable Large-Scale Data Processing – Designed for handling extensive datasets efficiently.
-- 🔥 ChatGPT API with the Latest Embedding Model – Ensures high-accuracy text search and retrieval.
-- ⚡ Optimized RAG Pipeline – Balances retrieval accuracy and generation quality for better responses.
-- 💾 Local Vector Database Storage – Saves embeddings locally to minimize API calls, reducing cost and improving speed.
-- 🏗 Customizable & Extendable – Easily tweak settings, vector database configurations, and embeddings.
+-  Scalable Large-Scale Data Processing – Designed for handling extensive datasets efficiently.
+-  ChatGPT API with the Latest Embedding Model – Ensures high-accuracy text search and retrieval.
+-  Optimized RAG Pipeline – Balances retrieval accuracy and generation quality for better responses.
+- Local Vector Database Storage – Saves embeddings locally to minimize API calls, reducing cost and improving speed.
+- Customizable & Extendable – Easily tweak settings, vector database configurations, and embeddings.
+
 ### 💡 How It Works
 - Preprocess Large Datasets : Loads and processes structured or unstructured data.
 - Generate & Store Embeddings : Uses ChatGPT embeddings and saves them locally for vector-based search.
@@ -55,35 +64,49 @@ For testing, this system utilizes the Open Australian Legal Corpus, available on
 - API Optimization : By caching embeddings and search results, the system reduces redundant API calls.
 
 ### 🔹 Data Processing & Storage
-- ✅ Data Ingestion – Reads and loads structured/unstructured documents from a JSONL file into MongoDB.
-- ✅ Embedding Generation – Uses OpenAI's embedding API to convert text into high-dimensional vector representations for efficient search.
+- Data Ingestion – Reads and loads structured/unstructured documents from a JSONL file into MongoDB.
+-  Embedding Generation – Uses OpenAI's embedding API to convert text into high-dimensional vector representations for efficient search.
 
 ### 🔍 Intelligent Search & Retrieval
-- ⚡ Vector Search – Employs Annoy (Approximate Nearest Neighbors) for fast and scalable vector-based document retrieval.
-- 📊 Similarity Ranking – Uses cosine similarity to rank and filter the most relevant documents based on the user query.
+-  Vector Search – Employs Annoy (Approximate Nearest Neighbors) for fast and scalable vector-based document retrieval.
+-  Similarity Ranking – Uses cosine similarity to rank and filter the most relevant documents based on the user query.
 
 ### 🧠 AI-Powered Summarization
-💡 Context-Aware Summarization – Extracts insights from the top 10 retrieved cases and summarizes results using ChatGPT.
+- Context-Aware Summarization – Extracts insights from the top 10 retrieved cases and summarizes results using ChatGPT.
 
-### ⚙️ Scalable & Modular Design
-#### 🏗 Modular Architecture:
-- 📂 Data Ingestion: Reads documents from a JSONL file and stores them in MongoDB.
-- 🧠Embedding Generation: Uses OpenAI's embedding API to convert text into high-dimensional vectors.
-- ⚡ Vector Search:Utilizes Annoy for efficient, approximate nearest neighbor searches.
-- 📊 Similarity Ranking:Applies cosine similarity to filter and rank relevant documents.
-- 📝 Summarization:Summarizes the top 10 retrieved cases using ChatGPT.
+### ⚙️ Modular Architecture 
+- Data Ingestion: Reads documents and stores them in MongoDB.
+- Embedding Generation: Uses OpenAI's embedding API to convert text into high-dimensional vectors.
+- Search Emgine: Utilizes Annoy for efficient, approximate nearest neighbor searches.
+- Similarity Ranking: Applies cosine similarity to filter and rank relevant documents.
+- Summarization: Summarizes the top 10 retrieved cases using ChatGPT.
 
 
 ## 📂 Project Structure
-- **config.py**:Loads environment variables (.env) 
-- **ingest.py(ingest_Australian_Legal_Corpus)** :Ingests data into MongoDB
-- **update_embeddings.py** Update the embedding in Mongo DB. 
-- **db.py**:ETL query, Embedding computation, Annoy index building, and similarity search
-- **chatgpt.py** : ChatGPT summarization of retrieved cases
-- **test_main.py**:    Main entry point for user query processing to test output in cl
-- **.env**:   Contains sensitive variables (API keys, MongoDB URI, etc.)
-- **requirements.txt**:   Python dependencies
-
+```py
+AI-RAG-FLOW-AI-Powered-Datawharehouse-System-/
+├── .env                          # Environment variables file 
+├── config.py                     # Python configuration file 
+├── requirements.txt              # List of Python dependencies
+├── main.py                       # Main testing script 
+├── db.py                         # Database handler&related functions
+├── openai_service.py             # OpenAI service
+├── annoySearch.py                # Search using annoy index
+├── preprocess/
+│   ├── __init__.py               
+│   ├── ingest_Australian_Legal_Corpus.py
+│   ├── ingest_us_constitution.py   # Script to ingest 
+│   ├── build_searchengine.py       # Script to build the Annoy index 
+│   └── update_corpus_embeddings.py # Script to update embeddings in DB
+├── Corpus/
+│   ├──  Us_Constitution.json
+│   └──  Open_Australian_Legal_Corpus,jsonl
+└── annoy/
+    ├── usc.ann                 # Annoy index file 
+    ├── usc_id_map.pkl          # ID map for the Annoy index file 
+    ├── auslaw.ann                # Annoy index file 
+    └── aus_id_map.pkl            # ID map for the Annoy index file 
+```
 ## 🔧 Setup Instructions
 ### 1. 🖥️ Clone the Repository
 
@@ -106,40 +129,302 @@ Create a .env file in the project root with the following content:
 ```bash
 OPENAI_API_KEY=your_openai_api_key_here # Get OpenAI'API 
 MONGO_URI=mongodb://localhost:27017/   # Local 
-JSONL_PATH=your_data.jsonl             # Add the path for the ingesting
 EMBEDDING_MODEL=text-embedding-3-large # The latest model
-EMBEDDING_DIMENSIONS=1024              # This is the configuration of text-embedding-3-large
+EMBEDDING_DIMENSIONS=3072             # This is the configuration of text-embedding-3-large
+AUSLEGAL_DOCUMENT_PATH=./Corpus/Open_Australian_Legal_Corpus.jsonl # pre processed data set
+USCON_DOCUMENT_PATH=./Corpus/Us_Constitution.json # pre processed data set
+
 ```
-🔗 [OpenAI'API](https://openai.com/api/)
+### 4. 📂 Download Dataset
+- Once downloaded, place it under Corpus folder under the project folder
+#### Open Australian Legal Corpus, available on Kaggle:🔗 [Open Australian Legal Corpus](https://www.kaggle.com/datasets/umarbutler/open-australian-legal-corpus)
+#### Constitution ofthe United States:🔗 [Constitution ofthe United States](https://www.kaggle.com/datasets/yutomori2/constitution-of-the-united-states/data)
+### 5. 🔍 Check Data Structure of the dataset in config.py
+```bash
+COLLECTION = {
+    "US_CONSTITUTION_SET": {
+        "db_name": DB_NAME ,
+        "query_collection_name": QUERY_COLLECTION_NAME,
+        "embedding_collection_name": "us_constitution_embedding", # For Annoy Indexing
+        "annoy_collection_name": "us_constitution_annoy", # For Search
+        "annoy_index_path": "./annoy/usc.ann",
+        "id_map_path": "./annoy/usc_id_map.pkl",
+        "document_type": "US Constitution",  # Type of the document
+        "unique_index": "title"
+    },
+    "AUS_LAW_SET": {
+        "db_name": DB_NAME,
+        "query_collection_name": QUERY_COLLECTION_NAME,
+        "embedding_collection_name": "Australia_Law_2024_embedding", # For Annoy Indexing
+        "annoy_collection_name": "Australia_Law_2024_annoy", # For Search
+        "annoy_index_path": "./annoy/auslaw.ann",
+        "id_map_path": "./annoy/aus_id_map.pkl",
+        "document_type": "Australia Laws 2024",  # Type of the document
+        "unique_index": "version_id"
+    }
+}
+```
+### 6. 💰 Obtain API key
+### 💰 Obtain API key from [OpenAI'API](https://openai.com/api/)
+
 ## ✅ Usage
 
-### 1. 🔄 Prepare Data
+### 1. 🔄 Ingest Data
 - Each Parsing needs to be implmented beforehand, then load your JSONL data into MongoDB by running:
+#### Input
 ```bash
-python ingest.py
+python -m preprocess.ingest_Us_constititon # For US_Consitiotion
+# python -m preprocess.ingest_Australian_Legal_Corpus # For Australian law
+# Or Make own Ingest script for MongoDB (At least one unique id is required such as title, version id, etc)
 ```
-### 2. ⚡ Process Queries
-- Launch the main application to handle user queries:
+#### Output
+```bash
+[INFO] Connected to MongoDB with write concern w=0.
+[INFO] Indexes dropped temporarily.
+[INFO] Found 52 documents with a title.
+[INFO] Found 0 existing titles in the collection.
+[INFO] Inserted 52 new documents using bulk unordered insert.
+[INFO] Re-created unique index on 'title'.
+[INFO] JSON data ingestion complete.
+[INFO] Processed: 52 new documents.
+[INFO] Skipped: 0 documents with missing 'title' or duplicates.
+[INFO] MongoDB connection closed.
+```
+### 2. 📊 Create Embedding 
+- Create Embedding and inserto the database using OpenAI's embedding. optinally sentense transformer can be used
+#### Input
+```bash
+python -m preprocess.update_embedding
+```
+#### Output
+```bash
+Generating embedding for text...
+[INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+Embedding generated.
+```
+### 3. 🏗️ Build Search Engine
+- Buidling the annoy index for each collection separatly, we will load each of he annoy as search engine.
+#### Input
+```bash
+python -m preprocess.build_searchEngine
+```
+#### Output
+```bash
+
+[INFO] Available configurations:
+[INFO] 1: US Constitution
+[INFO] 2: Australia Laws 2024
+[INFO] Enter configuration number: 1
+[INFO] Using configuration: US Constitution
+[INFO] Selected configuration details: {
+    "db_name": "ai_rag_db",
+    "query_collection_name": "User_queries",
+    "embedding_collection_name": "us_constitution_embedding",
+    "annoy_collection_name": "us_constitution_annoy",
+    "annoy_index_path": "./annoy/usc.ann",
+    "id_map_path": "./annoy/usc_id_map.pkl",
+    "document_type": "US Constitution",
+    "unique_index": "title"
+}
+[INFO] ANNOY_INDEX_PATH: ./annoy/usc.ann
+[INFO] ID_MAP_PATH: ./annoy/usc_id_map.pkl
+[INFO] Fetched 52 documents with embeddings from 'us_constitution_embedding'.
+[INFO] Annoy index built and saved to ./annoy/usc.ann
+[INFO] ID map saved to file: ./annoy/usc_id_map.pkl
+[INFO] Cleared previous documents from collection 'us_constitution_annoy'.
+[INFO] Inserted 52 documents into 'us_constitution_annoy'.
+[INFO] MongoDB connection closed.
+```
+### 4. ⚡ Process Queries
+- Creat main.py Launch the main application to handle user queries:
+#### Example:
+```python
+# main.py
+import json
+from DatabaseHandler import DatabaseHandler
+from openai_service import ChatGPT
+from config import COLLECTION
+
+def display_more_details(case):
+    """
+    Prints additional details about a case, excluding '_id' and 'map_id'.
+    """
+    print("\n--- More Details ---")
+    for key, value in case.items():
+        if key not in ["_id", "map_id"]:
+            print(f"{key}: {value}")
+    print("--- End Details ---\n")
+
+
+def main():
+    # List available configurations from COLLECTION.
+    keys = list(COLLECTION.keys())
+    print("Available configurations:")
+    for i, key in enumerate(keys, start=1):
+        doc_type = COLLECTION[key].get("document_type", "Unknown")
+        print(f"{i}: {doc_type}")
+    
+    # Let the user choose a configuration by number.
+    try:
+        selected_num = int(input("Enter configuration number: ").strip())
+        if selected_num < 1 or selected_num > len(keys):
+            raise ValueError("Selection out of range")
+    except Exception as e:
+        print("Invalid configuration number. Defaulting to 1.")
+        selected_num = 1
+
+    config = COLLECTION[keys[selected_num - 1]]
+    print(f"Using configuration: {config['document_type']}")
+    print("Selected configuration details:")
+    print(json.dumps(config, indent=4))
+    
+    # Instantiate the DatabaseHandler and ChatGPT service.
+    db_handler = DatabaseHandler(config)
+    chat_service = ChatGPT(db_handler.db)
+    
+    last_query_results = None
+    current_idx = 0
+    
+    while True:
+        user_input = input("Enter a query, 'next' for next result, 'more' for details, or 'exit': ").strip().lower()
+        if user_input == "exit":
+            break
+        elif user_input == "next":
+            if not last_query_results:
+                print("No previous query found. Please enter a new query first.")
+                continue
+            if current_idx >= len(last_query_results):
+                print("No more results for this query. Enter a new query.")
+                continue
+            case, similarity = last_query_results[current_idx]
+            current_idx += 1
+        elif user_input == "more":
+            if not last_query_results or current_idx == 0:
+                print("No result available for more details. Enter a query first.")
+                continue
+            # Show details for the last returned case (previous index).
+            case, similarity = last_query_results[current_idx - 1]
+            display_more_details(case)
+            continue
+        else:
+            # Process a new query.
+            print("Processing query...")
+            last_query_results, processed = db_handler.process_query(user_input)
+            if not processed:
+                print("Daily search limit reached. Exiting.")
+                break
+            if not last_query_results:
+                print("No results found. Try another query.")
+                continue
+            current_idx = 0
+            case, similarity = last_query_results[current_idx]
+            current_idx += 1
+
+        # Generate and display a summary for the current case.
+        summary = chat_service.summarize_cases(case)
+        print(f"\nSummary (Similarity: {similarity:.2f}):\n{summary}\n")
+    db_handler.close() # Close the connection
+    print("Goodbye!")
+
+if __name__ == "__main__":
+    main()
+```
+#### Input
 ```bash
 python main.py
 ```
-- When prompted, enter your query. The system will:
-Compute the embedding for your query.
-- Search the Annoy index for similar documents.
-- Summarize the top 10 matching cases using ChatGPT.
-- Display the summarized insights in the console.
+#### Output
+```
+Available configurations:
+1: US Constitution
+2: Australia Laws 2024
+Enter configuration number: 1
+Using configuration: US Constitution
+Selected configuration details:
+{
+    "db_name": "ai_rag_db",
+    "query_collection_name": "User_queries",
+    "embedding_collection_name": "us_constitution_embedding",
+    "annoy_collection_name": "us_constitution_annoy",
+    "annoy_index_path": "./annoy/usc.ann",
+    "id_map_path": "./annoy/usc_id_map.pkl",
+    "document_type": "US Constitution",
+    "unique_index": "title"
+}
+[INFO] Annoy index loaded from ./annoy/usc.ann
+[INFO] ID map loaded from ./annoy/usc_id_map.pkl
+[INFO] Annoy index and ID map loaded successfully.
+[INFO] DatabaseHandler initialized with configuration: US Constitution
+Enter a query, 'next' for next result, 'more' for details, or 'exit': most important right
+Processing query...
+[INFO] User query: most important right
+[INFO] Querying...
+[INFO] Today's date: 2025-03-04
+[INFO] Usage of today: 15
+[INFO] Generating embedding for text...
+[INFO] HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+[INFO] Embedding generated.
+[INFO] Today's date: 2025-03-04
+[INFO] Updated usage of today to 16.
+[INFO] Stored new query embedding in MongoDB.
+[INFO] Searching in the vector database for up to 10 results.
+[INFO] Searching for similar documents...
+[INFO] Annoy returned 10 indices.
+[INFO] Search complete. 1 documents returned.
+[INFO] Query: most important right | Document [title]: First Amendment | Similarity: 0.43
+[INFO] Generating summary for case with title: First Amendment
+[INFO] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+[INFO] Summary generated successfully for case with _id: 67c6ba0c21385f76c48478de
+[INFO] Updated summary in database for case with _id: 67c6ba0c21385f76c48478de
+[INFO] Today's date: 2025-03-04
+[INFO] Usage of today: 31
+[INFO] Today s date: 2025-03-04
+[INFO] Updated usage of today to 32.
+
+Summary (Similarity: 0.43):
+This excerpt is from the First Amendment to the United States Constitution, which outlines several fundamental rights and freedoms. It prohibits Congress from enacting legislation that establishes any religion or impedes the free practice of religion. Additionally, it safeguards freedoms related to speech, the press, peaceful assembly, and the right to petition the government to address grievances.
+
+Top Insights:
+1. **Religious Freedom**: The First Amendment ensures both the prevention of a government-mandated religion and the protection of individuals' rights to practice religion as they choose.
+2. **Freedom of Speech and Press**: These freedoms are crucial for a democratic society, allowing individuals to express themselves and share information without undue government interference.
+3. **Right to Assemble and Petition**: Citizens have the right to gather peacefully and to seek governmental changes, which supports public participation in democracy and accountability from elected officials.
+
+Enter a query, 'next' for next result, 'more' for details, or 'exit': more
+
+--- More Details ---
+article: Amendment
+section:
+title: First Amendment
+text: Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof; or abridging the freedom of speech, or of the press; or the right of the people peaceably to assemble, and to petition the Government for a redress of grievances.
+summary: This excerpt is from the First Amendment to the United States Constitution, which outlines several fundamental rights and freedoms. It prohibits Congress from enacting legislation that establishes any religion or impedes the free practice of religion. Additionally, it safeguards freedoms related to speech, the press, peaceful assembly, and the right to petition the government to address grievances.
+
+Top Insights:
+1. **Religious Freedom**: The First Amendment ensures both the prevention of a government-mandated religion and the protection of individuals' rights to practice religion as they choose.
+2. **Freedom of Speech and Press**: These freedoms are crucial for a democratic society, allowing individuals to express themselves and share information without undue government interference.
+3. **Right to Assemble and Petition**: Citizens have the right to gather peacefully and to seek governmental changes, which supports public participation in democracy and accountability from elected officials.
+--- End Details ---
+
+Enter a query, 'next' for next result, 'more' for details, or 'exit': exit
+Goodbye!
+```
 
 ## ⚙️ Customization
 - Embedding Model: Change the EMBEDDING_MODEL in your .env file to use a different OpenAI model or Localy compute using sentenceTransformer if needed.
 - MongoDB Configuration: Adjust the MONGO_URI in your .env file to connect to a different MongoDB instance.
-- Annoy Settings: Tweak parameters such as VECTOR_SIZE and ANNOY_TREE_COUNT in vector_db.py to suit your data and - performance requirements.
+- Annoy Settings: Tweak parameters such as VECTOR_SIZE and ANNOY_TREE_COUNT in build_searchEngine.py to suit your data and - performance requirements.
 - Summarization Prompt: Modify the prompt in summarizer.py to tailor the summarization output.
-- ingest.py: ingest_Australian_Legal_Corpus.py is the example of how to ingest data from JSONL to mongoDB. Each ingesting requires diffrent methods.
-- More Database: Modify client of mongodb to add more database.
-- Number of TOP_QUERY_RESULT: Each result takes around 1GB in RAM.
-## 🚀 Future Improvements
-- Add More DataSet
-- Advanced Vector DBs: Experiment with specialized vector databases like Pinecone, Milvus, or Qdrant for even faster search performance.
+- More Database: To add more custmize data follow the each step:   
+  1. [Check Data Structure of the dataset in config.py and add the dataset](#download-dataset)
+  2. [Ingest Data](#ingest-data)
+  3. [Create Embedding ](#create-embedding )
+  4. [Create Embedding ](#create-embedding )
+  5. [Build Search Engine](#build-search-engine)
+ 
+- Other Configuration: 
+  - THRESHOLD_QUERY_SEARCH - Threshold of the cosine simialrity of the search
+  - TOP_QUERY_RESULT - Number of query retiriveted at once
+  - LIMIT=1000   -  limit of the query per day
+
 ## 📜 License
 #### ⚠️ This project is licensed under the Apache License 2.0.
 
