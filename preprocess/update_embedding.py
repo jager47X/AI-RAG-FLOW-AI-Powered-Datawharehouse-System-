@@ -45,7 +45,7 @@ def update_corpus_embeddings(config):
 
         docs = embedding_collection.find({"embedding": {"$exists": False}})
         unique_field = config.get("unique_index", "title")  # Default to "title"
-        openAI_Embeddings = ChatGPT(db)
+        openAI_Embeddings = ChatGPT(db,preprocess=True)
 
         user_input = input("Processed? (y/n): ").strip().lower()
         if user_input != 'y':

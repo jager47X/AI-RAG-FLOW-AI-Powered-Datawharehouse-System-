@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 class ChatGPT:
-    def __init__(self, db):
+    def __init__(self, db, preprocess=False):
         """
         Initialize ChatGPT service.
         
@@ -23,6 +23,7 @@ class ChatGPT:
         self.chat_model = "gpt-4o"  # Chat model to use for completions
         self.embedding_model = EMBEDDING_MODEL
         self.db = db
+        self.preprocess=preprocess
         # Optionally, set a default unique field; this can be overwritten externally.
         self.unique_field = "title"
 
@@ -161,24 +162,27 @@ class ChatGPT:
         Returns True if today's search count is below the given limit.
         Also returns the current count.
         """
-        today = self.get_today_str()
-        record = self.db.search_limits.find_one({"date": today})
-        if record is None:
-            new_record = {"date": today, "OpenAPI_Request": 0}
-            self.db.search_limits.insert_one(new_record)
-            logger.info("Usage of today: 0.")
-            return True, 0
-        usage_today = record.get("OpenAPI_Request", 0)
-        logger.info("Usage of today: %d", usage_today)
-        return usage_today < limit, usage_today
+        if not self.preprocess:
+            today = self.get_today_str()
+            record = self.db.search_limits.find_one({"date": today})
+            if record is None:
+                new_record = {"date": today, "OpenAPI_Request": 0}
+                self.db.search_limits.insert_one(new_record)
+                logger.info("Usage of today: 0.")
+                return True, 0
+            usage_today = record.get("OpenAPI_Request", 0)
+            logger.info("Usage of today: %d", usage_today)
+            return usage_today < limit, usage_today
+        return True,0
 
     def increment_search_count(self, count):
         """Increment today's search count by one."""
-        today = self.get_today_str()
-        count += 1
-        logger.info("Updated usage of today to %d.", count)
-        self.db.search_limits.update_one(
-            {"date": today},
-            {"$inc": {"OpenAPI_Request": count}},
-            upsert=True
-        )
+        if not self.preprocess:
+            today = self.get_today_str()
+            count += 1
+            logger.info("Updated usage of today to %d.", count)
+            self.db.search_limits.update_one(
+                {"date": today},
+                {"$inc": {"OpenAPI_Request": count}},
+                upsert=True
+            )
