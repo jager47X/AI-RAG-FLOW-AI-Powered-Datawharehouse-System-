@@ -40,19 +40,12 @@ Currently, we rely on ChatGPT for searching, but it presents several issues:
 - **OpenAI embeddings** for semantic search.
 - **Annoy-based vector search** for efficient similarity-based matching.
 
-### Key Improvements:
--  **Reduced Hallucination** – By restricting searches to a **local domain**, we drastically lower the chances of misinformation.
--  **Higher Accuracy** – Utilizing the **latest OpenAI embedding model**, we aim to surpass existing solutions in precision and relevance.
--  **Optimized API Usage** – By caching and saving search queries and keep the embedding in the storage, we **reduce API costs** while maintaining efficient retrieval.
--  **Fast Search Engine** – By using the prebuild annoy index, we **reduce the time of search** .
-
 ## Features
 ### 🔹 Key Features
--  Scalable Large-Scale Data Processing – Designed for handling extensive datasets efficiently.
--  ChatGPT API with the Latest Embedding Model – Ensures high-accuracy text search and retrieval.
--  Optimized RAG Pipeline – Balances retrieval accuracy and generation quality for better responses.
-- Local Vector Database Storage – Saves embeddings locally to minimize API calls, reducing cost and improving speed.
-- Customizable & Extendable – Easily tweak settings, vector database configurations, and embeddings.
+-  **No Hallucination** – By restricting searches to a **local domain**, we drastically lower the chances of misinformation.
+-  **High Accuracy** – Utilizing the **latest OpenAI embedding model**, we aim to surpass existing solutions in precision and relevance.
+-  **Optimized API Usage** – By caching and saving search queries and keep the embedding in the storage, we **reduce API costs** while maintaining efficient retrieval.
+-  **Fast Search Engine** – By using the prebuild annoy index, we **reduce the time of search** .
 
 ### 💡 How It Works
 - Preprocess Large Datasets : Loads and processes structured or unstructured data.
