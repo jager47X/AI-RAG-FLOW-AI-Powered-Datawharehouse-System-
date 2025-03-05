@@ -56,7 +56,7 @@ def update_corpus_embeddings(config):
 
         logger.info("Starting embedding update...")
 
-        openAI_Embeddings = ChatGPT(db, preprocess=True)
+        openAI_Embeddings = ChatGPT(db,None,None,preprocess=True)
 
         # Confirm with the user before starting.
         user_input = input("Proceed with embedding update? (y/n): ").strip().lower()

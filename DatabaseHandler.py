@@ -54,7 +54,7 @@ class DatabaseHandler:
         self.annoy_collection = self.db[self.annoy_collection_name]
         # Instantiate the Annoy search module and ChatGPT service.
         self.searchEngine = AnnoySearch(self.annoy_index_path, self.id_map_path, self.db_name,self.annoy_collection_name) # Make sure passing NAME of db and collection
-        self.openAI = ChatGPT(db=self.db )
+        self.openAI = ChatGPT(self.db,self.document_type,self.unique_field )
 
         # Also set the embedding model from config.
         self.embedding_model = EMBEDDING_MODEL
@@ -132,7 +132,7 @@ class DatabaseHandler:
         while rephrase_attempt < 5 or similar_cases==0:
             if rephrase_attempt > 0:
                 logger.info("No similar cases found above threshold. Rephrasing query (attempt %d)...", rephrase_attempt + 1)
-                current_query = self.openAI.rephrase_query(query, self.document_type,previous_rephrases)
+                current_query = self.openAI.rephrase_query(query, previous_rephrases)
                 logger.info("New query: %s", current_query)
                 previous_rephrases.append(current_query)
                 query = current_query

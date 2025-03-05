@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 class ChatGPT:
-    def __init__(self, db, collection_name="us_constitution_annoy",preprocess=False):
+    def __init__(self, db, document_type=None,unique_field=None,preprocess=False):
         """
         Initialize ChatGPT service.
         
@@ -24,8 +24,8 @@ class ChatGPT:
         self.embedding_model = EMBEDDING_MODEL
         self.db = db
         self.preprocess=preprocess
-        # Optionally, set a default unique field; this can be overwritten externally.
-        self.unique_field = "title"
+        self.document_type=document_type
+        self.unique_field = unique_field
         
     def summarize_cases(self, case):
             """
