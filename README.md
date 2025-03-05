@@ -1,4 +1,4 @@
-# AI-RAG FLOW -AI Powered Datawharehouse System-
+# AI-RAG FLOW -AI Powered Database System-
 ![logo](logo.png)
 🌍[DEMO](https://ai-ragflow.com/)
 ## 📖 Table of Contents
