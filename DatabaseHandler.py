@@ -54,7 +54,7 @@ class DatabaseHandler:
         self.annoy_collection = self.db[self.annoy_collection_name]
         # Instantiate the Annoy search module and ChatGPT service.
         self.searchEngine = AnnoySearch(self.annoy_index_path, self.id_map_path, self.db_name,self.annoy_collection_name) # Make sure passing NAME of db and collection
-        self.openAI = ChatGPT(self.db,self.document_type,self.unique_field )
+        self.openAI = ChatGPT(self.db,self.annoy_collection_name,self.unique_field )
 
         # Also set the embedding model from config.
         self.embedding_model = EMBEDDING_MODEL

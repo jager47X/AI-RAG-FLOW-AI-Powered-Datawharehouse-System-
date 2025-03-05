@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger(__name__)
 
 class ChatGPT:
-    def __init__(self, db, document_type=None,unique_field=None,preprocess=False):
+    def __init__(self, db, collection_name=None,unique_field=None,preprocess=False):
         """
         Initialize ChatGPT service.
         
@@ -24,7 +24,7 @@ class ChatGPT:
         self.embedding_model = EMBEDDING_MODEL
         self.db = db
         self.preprocess=preprocess
-        self.document_type=document_type
+        self.collection_name=collection_name
         self.unique_field = unique_field
         
     def summarize_cases(self, case):
@@ -41,7 +41,7 @@ class ChatGPT:
 
             context = f"text:\n{case.get('text')}"
             prompt = (
-                f"Summarize the following case:\n\n"
+                f"Summarize the following case in short:\n\n"
                 f"{context}\n\nSummary:"
             )
 

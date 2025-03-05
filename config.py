@@ -6,8 +6,9 @@ load_dotenv()  # Load variables from .env
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL")
+CHATMODEL="gpt-4o"
 EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS"))
-THRESHOLD_QUERY_SEARCH = 0.42 # Threshold of the cosine simialrity of the search
+THRESHOLD_QUERY_SEARCH = 0.45 # Threshold of the cosine simialrity of the search
 TOP_QUERY_RESULT= 10 # Number of query retiriveted at once
 LIMIT=10000 # Limit of request per day
 AUSLEGAL_DOCUMENT_PATH = os.getenv("AUSLEGAL_DOCUMENT_PATH")
