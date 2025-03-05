@@ -413,7 +413,7 @@ Goodbye!
 - Other Configuration: 
   - THRESHOLD_QUERY_SEARCH - Threshold of the cosine simialrity of the search
   - TOP_QUERY_RESULT - Number of query retiriveted at once
-  - LIMIT=1000   -  limit of the query per day
+  - LIMIT -  limit of the query per day
 
 ## License
 #### This project is licensed under the Apache License 2.0.
