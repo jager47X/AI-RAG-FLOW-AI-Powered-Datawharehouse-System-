@@ -38,7 +38,7 @@ Current RAG presents several issues:
 - Combining a language model with a retrieval system adds architectural complexity. Ensuring smooth integration between the two components—especially keeping the retrieval and generation parts in sync—can be challenging.
 
 #### Latency Issues:
-- The extra step of fetching relevant information from an external source can introduce delays. Although this can be mitigated with efficient indexing and caching, it still may not match the speed of a self-contained, fine-tuned model.
+- The extra step of fetching relevant information from an external source can introduce delays. Although this can be mitigated with efficient indexing and caching.
 
 #### Maintenance of the Knowledge Base:
 - RAG relies on a maintained external repository. Regular updates, curation, and quality control are necessary to ensure that the retrieval component remains effective, which adds an operational burden.
