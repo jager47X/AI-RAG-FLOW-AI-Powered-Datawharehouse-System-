@@ -31,19 +31,19 @@
 Current RAG presents several issues:
 
 ### Problems:
-####Dependency on Retrieval Quality:
+#### Dependency on Retrieval Quality:
 - The system’s performance largely hinges on the external knowledge base. If the documents or data retrieved are irrelevant, outdated, or low quality, the generated responses can suffer in accuracy and reliability.
 
-####Integration Complexity:
+#### Integration Complexity:
 - Combining a language model with a retrieval system adds architectural complexity. Ensuring smooth integration between the two components—especially keeping the retrieval and generation parts in sync—can be challenging.
 
-####Latency Issues:
+#### Latency Issues:
 - The extra step of fetching relevant information from an external source can introduce delays. Although this can be mitigated with efficient indexing and caching, it still may not match the speed of a self-contained, fine-tuned model.
 
-####Maintenance of the Knowledge Base:
+#### Maintenance of the Knowledge Base:
 - RAG relies on a maintained external repository. Regular updates, curation, and quality control are necessary to ensure that the retrieval component remains effective, which adds an operational burden.
 
-####Fallback Handling:
+#### Fallback Handling:
 - In cases where the retrieval system fails to find relevant data, the model may revert to its base, possibly outdated, knowledge. This can lead to incomplete or less informed responses.
 
 ### Solution:
