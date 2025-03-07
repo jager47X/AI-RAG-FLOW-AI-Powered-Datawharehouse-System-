@@ -1,4 +1,4 @@
-# R Flow - Indexed Retrieval-Augmented Generation System -
+# R-Flow - Indexed Retrieval-Augmented Generation System -
 ![logo](images/logo.png)
 🌍[DEMO](https://ai-ragflow.com/)
 ## 📖 Table of Contents
