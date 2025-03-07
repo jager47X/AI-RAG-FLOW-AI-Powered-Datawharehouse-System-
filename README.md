@@ -26,59 +26,6 @@
 
 Current RAG presents several issues:
 
-### Problems:
-#### Dependency on Retrieval Quality:
-- The system’s performance largely hinges on the external knowledge base. If the documents or data retrieved are irrelevant, outdated, or low quality, the generated responses can suffer in accuracy and reliability.
-
-#### Integration Complexity:
-- Combining a language model with a retrieval system adds architectural complexity. Ensuring smooth integration between the two components—especially keeping the retrieval and generation parts in sync—can be challenging.
-
-#### Latency Issues:
-- The extra step of fetching relevant information from an external source can introduce delays. Although this can be mitigated with efficient indexing and caching.
-
-#### Maintenance of the Knowledge Base:
-- RAG relies on a maintained external repository. Regular updates, curation, and quality control are necessary to ensure that the retrieval component remains effective, which adds an operational burden.
-
-#### Fallback Handling:
-- In cases where the retrieval system fails to find relevant data, the model may revert to its base, possibly outdated, knowledge. This can lead to incomplete or less informed responses.
-
-### Solution:
-#### This project is a **Retrieval-Augmented Generation (RAG) system** designed to handle large datasets, specifically for **legal text analysis and retrieval**. It leverages:
-- **MongoDB** for document storage and retrieval.
-- **OpenAI embeddings** for semantic search.
-- **Annoy-based vector search** for efficient similarity-based matching.
-
-## Features
-### 🔹 Key Features
--  **No Hallucination** – By restricting searches to a **local domain**, we drastically lower the chances of misinformation.
--  **High Accuracy** – Utilizing the **latest OpenAI embedding model**, we aim to surpass existing solutions in precision and relevance.
--  **Optimized API Usage** – By caching and saving search queries and keep the embedding in the storage, we **reduce API costs** while maintaining efficient retrieval.
--  **Fast Search Engine** – By using the prebuild annoy index, we **reduce the time of search** .
-
-### 💡 How It Works
-- Preprocess Large Datasets : Loads and processes structured or unstructured data.
-- Generate & Store Embeddings : Uses ChatGPT embeddings and saves them locally for vector-based search.
-- Efficient Retrieval & Augmentation : Quickly fetches relevant data using an optimized vector search engine.
-- ChatGPT-Powered Responses : The system refines retrieved results and generates intelligent, context-aware responses.
-- API Optimization : By caching embeddings and search results, the system reduces redundant API calls.
-
-### 🔹 Data Processing & Storage
-- Data Ingestion – Reads and loads structured/unstructured documents from a JSONL file into MongoDB.
--  Embedding Generation – Uses OpenAI's embedding API to convert text into high-dimensional vector representations for efficient search.
-
-### 🔍 Intelligent Search & Retrieval
--  Vector Search – Employs Annoy (Approximate Nearest Neighbors) for fast and scalable vector-based document retrieval.
--  Similarity Ranking – Uses cosine similarity to rank and filter the most relevant documents based on the user query.
-
-### 🧠 AI-Powered Summarization
-- Context-Aware Summarization – Extracts insights from the top 10 retrieved cases and summarizes results using ChatGPT.
-
-### ⚙️ Modular Architecture 
-- Data Ingestion: Reads documents and stores them in MongoDB.
-- Embedding Generation: Uses OpenAI's embedding API to convert text into high-dimensional vectors.
-- Search Emgine: Utilizes Annoy for efficient, approximate nearest neighbor searches.
-- Similarity Ranking: Applies cosine similarity to filter and rank relevant documents.
-- Summarization: Summarizes the top 10 retrieved cases using ChatGPT.
 
 
 ## Project Structure
