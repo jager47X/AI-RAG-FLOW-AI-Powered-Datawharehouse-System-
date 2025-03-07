@@ -99,7 +99,7 @@ AI-RAG-FLOW-AI-Powered-Datawharehouse-System-/
 │   └── update_corpus_embeddings.py # Script to update embeddings in DB
 ├── Corpus/
 │   ├──  Us_Constitution.json
-│   └──  Open_Australian_Legal_Corpus,jsonl
+│   └──  Open_Australian_Legal_Corpus.jsonl
 └── annoy/
     ├── usc.ann                 # Annoy index file 
     ├── usc_id_map.pkl          # ID map for the Annoy index file 
@@ -421,14 +421,14 @@ Goodbye!
 - Other Configuration: 
   - THRESHOLD_QUERY_SEARCH - Threshold of the cosine simialrity of the search
   - TOP_QUERY_RESULT - Number of query retiriveted at once
-  - LIMIT -  limit of the query per day
+  - LIMIT - limit of the query per day
 
 ## License
 #### This project is licensed under the Apache License 2.0.
 
 ## Contributer
 ### Logo Designer: Ambre Grimault 
-
+### Tester: 
 ## Contact
 Contributions, issues, and feature requests are welcome! Please check the issues page for known issues and to submit new ones.
-#### 📧Email: contact.ragflow@gmail.com 
+#### 📧Email: yutomoridm@gmail.com
