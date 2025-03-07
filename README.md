@@ -18,7 +18,6 @@
   - [Build Search Engine](#build-search-engine)
   - [Process Queries](#process-queries)
 - ⚙️[Customization](#customization)
-  - [Change the Embedding Model](#change-the-embedding-model)
 - 📜[License](#license)
 - 🤝[Contributor](#contributor)
 - 📬[Contact](#contact)
