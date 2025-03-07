@@ -1,5 +1,5 @@
-# AI-RAG FLOW -AI Powered DataBase System-
-![logo](logo.png)
+# R-FLow-INDEXED Retrieval-Augmented Generation System -
+![logo](images/logo.png)
 🌍[DEMO](https://ai-ragflow.com/)
 ## 📖 Table of Contents
 - 📝[Introduction](#introduction)
@@ -22,9 +22,6 @@
 - 📜[License](#license)
 - 🤝[Contributor](#contributor)
 - 📬[Contact](#contact)
-
-
-
 ## Introduction
 ### Motivation
 
