@@ -1,4 +1,4 @@
-# R-FLow-INDEXED Retrieval-Augmented Generation System -
+# R-FLow-Indexed Retrieval-Augmented Generation System -
 ![logo](images/logo.png)
 🌍[DEMO](https://ai-ragflow.com/)
 ## 📖 Table of Contents
